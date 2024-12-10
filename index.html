@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Triangle Height Estimator</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    margin: 20px;
+    color: #333;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .container {
+    max-width: 500px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+
+  .triangle-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+  }
+
+  .inputs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .inputs .input-group {
+    flex: 1;
+    min-width: 120px;
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .inputs label {
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  .inputs input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  button {
+    display: block;
+    width: 100%;
+    background: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #218838;
+  }
+
+  .result {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 18px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Height Estimator</h1>
+<div class="container">
+  <div class="triangle-container">
+    <svg width="220" height="170">
+      <!-- a: horizontal base -->
+      <line x1="20" y1="150" x2="200" y2="150" stroke="#c1e1c5" stroke-width="4" />
+      <!-- c: vertical height -->
+      <line x1="20" y1="150" x2="20" y2="20" stroke="#c1e1c5" stroke-width="4" />
+      <!-- b: hypotenuse -->
+      <line x1="20" y1="20" x2="200" y2="150" stroke="#c1e1c5" stroke-width="4" />
+
+      <!-- Labels -->
+      <text x="110" y="165" font-size="16" text-anchor="middle">a</text>
+      <text x="10" y="85" font-size="16" text-anchor="middle">c</text>
+      <text x="120" y="95" font-size="16" text-anchor="middle">b</text>
+    </svg>
+  </div>
+
+  <div class="inputs">
+    <div class="input-group">
+      <label for="a">Horizontal (a):</label>
+      <input type="number" id="a" placeholder="Enter a"/>
+    </div>
+    <div class="input-group">
+      <label for="b">Inclined (b):</label>
+      <input type="number" id="b" placeholder="Enter b"/>
+    </div>
+    <div class="input-group">
+      <label for="c">Height (c):</label>
+      <input type="number" id="c" placeholder="Enter c"/>
+    </div>
+  </div>
+
+  <button onclick="calculateSide()">Calculate</button>
+
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+function calculateSide() {
+  const a = parseFloat(document.getElementById('a').value);
+  const b = parseFloat(document.getElementById('b').value);
+  const c = parseFloat(document.getElementById('c').value);
+
+  let resultText = '';
+  const filled = [!isNaN(a), !isNaN(b), !isNaN(c)].filter(Boolean).length;
+
+  if (filled < 2) {
+    document.getElementById('result').innerText = "Please fill in at least two sides.";
+    return;
+  }
+
+  let foundValue;
+
+  // Pythagorean relation: b² = a² + c²
+  if (!isNaN(a) && !isNaN(b) && isNaN(c)) {
+    if (b > a) {
+      foundValue = Math.sqrt(b*b - a*a);
+      resultText = "c = " + foundValue.toFixed(2);
+    } else {
+      resultText = "No valid triangle with these values.";
+    }
+  } else if (!isNaN(a) && !isNaN(c) && isNaN(b)) {
+    foundValue = Math.sqrt(a*a + c*c);
+    resultText = "b = " + foundValue.toFixed(2);
+  } else if (!isNaN(b) && !isNaN(c) && isNaN(a)) {
+    if (b > c) {
+      foundValue = Math.sqrt(b*b - c*c);
+      resultText = "a = " + foundValue.toFixed(2);
+    } else {
+      resultText = "No valid triangle with these values.";
+    }
+  } else {
+    resultText = "Please fill exactly two sides.";
+  }
+
+  document.getElementById('result').innerText = resultText;
+}
+</script>
+
+</body>
+</html>
